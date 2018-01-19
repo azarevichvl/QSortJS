@@ -1,58 +1,47 @@
-var globalBadVar = 0;
+(function(){
+	document.getElementById("buttonSort").addEventListener("click", StartParse);
 
-function StartParse(){
-	globalBadVar = 0;
-	var inputSting = document.getElementById('strInput').value;
-	var arr = [];
+	let stepsCounter = 0;
 
-	inputSting = NormolizeStr(inputSting);
-	if (inputSting != ""){
+	function StartParse(){
+		stepsCounter = 0;
+		let inputString = document.getElementById('strInput').value;
 
-		var i = 0;
-		while (inputSting.length > 0){
-			var substr = inputSting.slice(0, inputSting.indexOf(","));
-			arr[i] = parseInt(substr);
-			inputSting = inputSting.replace(substr + ",",'');
-			i++;
+		if (inputString != ""){
+			let arr = inputString.split(',').map(element => parseInt(element));
+
+			arr = QSort(arr);
+
+			let SortedFieldAns = document.getElementById('Sorted');
+			SortedFieldAns.innerHTML = arr;
+
+			let StepsField = document.getElementById("StepsNumber");
+			StepsField.innerHTML = stepsCounter.toString();
+
+		} else {
+			alert("Wrong format! Requared \'1,2,3,4...\' ");
 		}
-
-		arr = QSort(arr);
-
-		var SortedFieldAns = document.getElementById('Sorted');
-		SortedFieldAns.innerHTML = arr;
-
-		var StepsField = document.getElementById("StepsNumber");
-		StepsField.innerHTML = globalBadVar.toString();
-
-	} else {
-		alert("Wrong format! Requared \'1,2,3,4...\' ");
 	}
-}
 
-function NormolizeStr(str){
-	str = str + ',';
-	return str; //return empty if error when normolize 
-}
+	function	QSort(arr){
+		if (arr.length <= 1) {
+	    return arr;
+	  }
 
-function	QSort(arr){
-	if (arr.length <= 1) {
-    return arr;
-  }
+	  let pivot = arr[0];
+	  
+	  let left = []; 
+	  let right = [];
 
-  var pivot = arr[0];
-  
-  var left = []; 
-  var right = [];
+	  for (var i = 1; i < arr.length; i++) {
+	  		stepsCounter++;
+		  	if (arr[i] < pivot){
+		     	left.push(arr[i]);
+		   	} else {
+		   		right.push(arr[i]);
+		   	}
+	 	}
 
-  for (var i = 1; i < arr.length; i++) {
-  		globalBadVar++;
-	  	if (arr[i] < pivot){
-	     	left.push(arr[i]);
-	   	} else {
-	   		right.push(arr[i]);
-	   	}
- 	}
-
-
-  return QSort(left).concat(pivot, QSort(right));
-}
+  	return QSort(left).concat(pivot, QSort(right));
+	}
+}());
